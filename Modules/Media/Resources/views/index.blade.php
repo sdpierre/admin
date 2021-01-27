@@ -70,9 +70,9 @@ Media Library
         <tr>
             <td> <input type="checkbox" class="media" name="media_id[]" value="{{ $media->id }}"> </td>
             <td>
-                <img src="{{ url('public/images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}" style="float:left; margin-right:10px;" width="10%">
+                <img src="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}" style="float:left; margin-right:10px;" width="10%">
                 @php $image_name = explode('.',$media->filename); @endphp
-                <a href="{{ url('public/images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}"> <strong> {{ $media->title }} </strong> </a>
+                <a href="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}"> <strong> {{ $media->title }} </strong> </a>
                 <p>{{ $media->filename }}</p>
                 @if(!empty($media->keyword))
                     @php $keywords = '' @endphp
