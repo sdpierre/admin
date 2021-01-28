@@ -38,19 +38,19 @@ Publication
       @if(count($categories) > 0)
       @foreach($categories as $category)
       @if(count($category['articles']) > 0)
-      <tr style="background-color: #ccc;">
-        <td>{{ $category['rubriquename'] }}</td>
+      <tr style="background-color: #eeeeee;">
+        <td> {{ $category['name'] }}</td>
         <td></td>
-        <td></td>
+        <td> Date de publication </td>
         <td></td>
         <td></td>
       </tr>
       
       @foreach($category['articles'] as $article)
       <tr>
-        <td>{{ $article->titre }}</td>
+        <td style="font-size: 14px;"> <strong> <a href="#"> {{ $article->title }} </a> </strong> </td>
         <td>
-          @if($article->ispublished == 'TRUE')
+          @if($article->is_active == 'TRUE')
             {{ 'Published' }}
           @else
             {{ 'Unpublished' }}
@@ -58,7 +58,7 @@ Publication
         </td>
         <td>{{ date('m/d/Y', strtotime($article->created_at)) }}</td>
         <td>{{ $article->surtitre }}</td>
-        <td> <a href="{{ url('article/add-photo/'.$article->id_article) }}">add photo</a></td>
+        <td> <a href="{{ url('article/add-photo/'.$article->id) }}">add photo</a></td>
       </tr>
       @endforeach
       

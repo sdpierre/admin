@@ -93,18 +93,18 @@
 				<!-- add class "multiple-expanded" to allow multiple submenus to open -->
 				<!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
 				<li>
-					<a href="/dashboard">
+					<a href="{{ url('/') }}">
 						<i class="entypo-gauge"></i>
 						<span class="title">Tableau de bord</span>
 					</a>
 				</li>
 
-				<!-- <li>
-					<a href="/dashboard">
+				<li>
+					<a href="{{ url('/') }}/search">
 						<i class="entypo-search"></i>
 						<span class="title">Recherche</span>
 					</a>
-				</li> -->
+				</li>
 	  			
 				<!-- <li>
 					<a href="{{ url('/') }}/annonces">
@@ -130,7 +130,7 @@
 				<li>
 					<a href="{{ url('/') }}/article/create">
 						<i class="entypo-pencil"></i>
-						<span class="title">Posts</span>
+						<span class="title">Article</span>
 					</a>
 				</li>
 
@@ -140,15 +140,15 @@
 						<span class="title">Publications</span>
 					</a>
 				</li>
-<!-- 
+
 				<li>
 					<a href="{{ url('/') }}/breaking">
 						<i class="entypo-pencil"></i>
 						<span class="title">Breaking News</span>
 					</a>
-				</li> -->
+				</li>
 				
-				<!-- <li>
+				<li>
 					<a href="{{ url('/') }}/medias">
 						<i class="entypo-camera"></i>
 						<span class="title">Apparence</span>
@@ -160,22 +160,22 @@
 							</a>
 						</li>
 					</ul>
-				</li> -->
+				</li>
 
 				<li>
-					<a href="{{ url('/') }}/medias">
+					<a href="{{ url('/') }}/media">
 						<i class="entypo-camera"></i>
-						<span class="title">Media</span>
+						<span class="title">Médias</span>
 					</a>
 					<ul>
 						<li>
 							<a href="{{ url('/') }}/media/">
-								<span class="title">library</span>
+								<span class="title">Bibliothèque</span>
 							</a>
 						</li>
 						<li>
-							<a href="{{ url('/') }}/media/create/">
-								<span class="title">Add New</span>
+							<a href="{{ url('/') }}/media/create">
+								<span class="title">Ajouter</span>
 							</a>
 						</li>
 					</ul>

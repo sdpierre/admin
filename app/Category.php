@@ -12,6 +12,12 @@ class Category extends Model
         'id', 'rubriquename', 'isuploaded', 'onsite', 'onapp', 'slug',
     ];
 
+    public function category_online(){
+        return Category::select('id','name','is_active','slug')
+			->where('is_active','TRUE')
+			->get();
+    }
+    
     public function articles(){
 	    return $this->hasMany('App\Article', 'id', 'category_id');
 	}

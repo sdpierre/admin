@@ -6,7 +6,7 @@
 @foreach($media_gallery as $media)
 
 <div class="col-md-2">
-	@php $image_url = url('/public/images_lenouvelliste/articles/'. $media->folder_date.'/'.$media->filename) @endphp
+	@php $image_url = url('/images_lenouvelliste/articles/'. $media->folder_date.'/'.$media->filename) @endphp
 	<div class="media_photo_block">
 	<label class="img-container">
 		

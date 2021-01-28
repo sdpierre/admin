@@ -80,7 +80,7 @@ Media Library
                         @php $keywords .= $value->keyword.',' @endphp
                     @endforeach
                 @endif
-                <p> <a href="javascript:;" data-id="{{ $media->id }}" data-image="{{ url('public/images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}" data-title="{{ $media->title }}" data-desc="{{ $media->description}}" data-keywords="{{ rtrim($keywords,',') }}"  class="image-modal">Edit</a> | <a class="text-danger delete-image" href="javascript:;" data-id="{{ $media->id }}"> Delete Permanently</a> | <a target="blank_" href="{{ url('public/images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}">View</a></p>
+                <p> <a href="javascript:;" data-id="{{ $media->id }}" data-image="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}" data-title="{{ $media->title }}" data-desc="{{ $media->description}}" data-keywords="{{ rtrim($keywords,',') }}"  class="image-modal">Edit</a> | <a class="text-danger delete-image" href="javascript:;" data-id="{{ $media->id }}"> Delete Permanently</a> | <a target="blank_" href="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}">View</a></p>
             </td>
             <td>{{ Auth::user()->username }}</td>
             <td>
