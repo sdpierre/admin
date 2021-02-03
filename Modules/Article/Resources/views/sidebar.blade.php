@@ -21,7 +21,7 @@
 		                
 		                <div class="col-sm-12">
 			                <div class="form-group">
-								<label> <i class="entypo-eye"></i>	Status : <strong> @if($article->enligne == "TRUE") En Ligne @else Hors Ligne @endif </strong> </label>
+								<label> <i class="entypo-eye"></i>	Status : <strong> @if($article->is_active == "TRUE") En Ligne @else Hors Ligne @endif </strong> </label>
 			                </div>
 		            	</div>
 		            	
@@ -34,10 +34,6 @@
 		            	
 		            	<div class="col-sm-12">
 			            <label> <i class="entypo-eye"></i>	Corrigé : <input type="checkbox" name="vehicle1" value="Bike"> </label>
-		            	</div>
-		            	
-		            	<div class="col-sm-12">
-			            <label> <i class="entypo-eye"></i>	Vues : <strong> {{ $article->click }} </strong> </label>
 		            	</div>
 		            	
 	                </div>
@@ -72,7 +68,7 @@
                     <select name="post_category" class="post_category form-control" id="select1">
 	                     <option value=""></option>
 	                     @foreach ($category as $category)
-	                    	<option @if($category->rubriqueid == $article->rubriqueid) selected @endif value="{{ $category->rubriqueid }}"> {{ $category->rubriquename }} </option>
+	                    	<option @if($category->id == $article->category_id) selected @endif value="{{ $category->id }}"> {{ $category->name }} </option>
 	                     @endforeach
 
 					</select>
@@ -82,11 +78,11 @@
 		                Chronique
                     <select name="post_chronique" class="post_chronique form-control">
      
-                        @if($article->chronique)
+                        @if($article->subcategory_id)
                         <option value=""></option>
-	                    @foreach ($chroniques[$article->rubriqueid] as $chroniques)
+	                    @foreach ($chroniques[$article->category_id] as $chroniques)
 	                    	<!-- <option value="{{ $chroniques->id }}"> {{ $chroniques->name }} </option> -->
-	                    	<option @if($chroniques->id == $article->chronique) selected @endif value="{{ $chroniques->id }}"> {{ $chroniques->name }} </option>
+	                    	<option @if($chroniques->id == $article->subcategory_id) selected @endif value="{{ $chroniques->id }}"> {{ $chroniques->name }} </option>
 	                    @endforeach
 	                    
                         @endif
@@ -128,7 +124,7 @@
                 	 <select name="post_auteurid" class="form-control">
 	                    <option value=""></option>
 						@foreach ($users as $user)
-							<option @if($user->id == $article->auteurid) selected @endif value="{{ $user->id }}"> {{ $user->first_name }} {{ $user->last_name }} </option>
+							<option @if($user->id == $article->author_id) selected @endif value="{{ $user->id }}"> {{ $user->first_name }} {{ $user->last_name }} </option>
 						@endforeach
 					</select>
 

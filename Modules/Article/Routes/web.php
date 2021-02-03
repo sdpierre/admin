@@ -12,9 +12,12 @@
 */
 
 Route::prefix('article')->group(function() {
-    Route::get('create', 'ArticleController@create')->name('article-create');
+    // Route::get('create', 'ArticleController@create')->name('article-create');
     Route::get('/', 'ArticleController@index')->name('article');
-
+    Route::get('/addnew/post/', 'ArticleController@create');
+    Route::post('/addnew/post/', 'ArticleController@store');
+    Route::get('edit/post/{article}', 'ArticleController@edit');
+    Route::post('edit/post/{article}', 'ArticleController@update');
     // Add photo
     Route::get('add-photo/{id}', 'ArticleController@addPhoto')->name('add-photo/{id}');
 

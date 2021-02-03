@@ -56,7 +56,7 @@ Publication
             {{ 'Unpublished' }}
           @endif
         </td>
-        <td>{{ date('m/d/Y', strtotime($article->created_at)) }}</td>
+        <td>{{ date('m/d/Y', strtotime($article->publication_date)) }}</td>
         <td>{{ $article->surtitre }}</td>
         <td> <a href="{{ url('article/add-photo/'.$article->id) }}">add photo</a></td>
       </tr>
