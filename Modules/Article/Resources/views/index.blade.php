@@ -64,7 +64,6 @@ Publication
         <td></td>
         <td></td>
         <td></td>
-        
       </tr>
       
       @foreach($category['articles'] as $article)
@@ -79,20 +78,13 @@ Publication
         </td>
         <td>
           @if($article->is_active == 'TRUE')
-            {!! '<span class="_3lds" style="border-color: rgb(66, 183, 42); background-color: rgb(66, 183, 42);"></span>Published' !!}
+            {!! '<span class="_3lds" style="border-color: rgb(66, 183, 42); background-color: rgb(66, 183, 42);"></span> Publier' !!}
           @else
-            {{ 'Unpublished' }}
+          {!! '<span class="_3lds" style="border-color: rgb(66, 183, 42); background-color: rgb(66, 183, 42);"></span> Non publié' !!}
           @endif
         </td>
         <td>
-          <a href="{{ url('article/add-photo/'.$article->id) }}">
-            <span class="badge badge-danger">
-				    0
-              </span>
-            </a>
-        </td>
-        <td>
-        <a href=""> Modifier </a> | <a href="" style="color:red;"> Corbeille </a> | <a href=""> Afficher </a>
+          <a href="{{ url('article/add-photo/'.$article->id) }}"> <span class="badge badge-danger"> 0 </span> </a>
         </td>
       </tr>
       @endforeach
