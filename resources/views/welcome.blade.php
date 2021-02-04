@@ -431,6 +431,12 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<label for="field-1" class="col-sm-12">Photographer</label>
+								<div class="col-sm-12">
+									<input type="text" class="form-control" data-role="tagsinput" name="photographer" id="photographer" value="" placeholder="Enter photographer name" />
+								</div>
+							</div>
+							<div class="form-group">
 								<label for="field-2" class="col-sm-12">Description</label>
 								<div class="col-sm-12">
 									<textarea cols="6" rows="6" name="description" id="imageDesc" class="form-control" placeholder="Enter image description"></textarea>

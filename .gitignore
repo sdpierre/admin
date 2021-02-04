@@ -1,4 +1,5 @@
-/vendor/
+/vendor/*
+/vendor_trash/*
 node_modules/
 npm-debug.log
 yarn-error.log
