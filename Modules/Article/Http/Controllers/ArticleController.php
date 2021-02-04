@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 // use Illuminate\Http\Response;
 use Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controller;
 
 class ArticleController extends Controller
@@ -27,7 +28,6 @@ class ArticleController extends Controller
         $articles = [];
 
         $datepublication = (!empty($_GET['datepublication'])) ? $_GET['datepublication'] : '';
-
         $categories = Category::where('is_active','TRUE')->get();
 
         foreach($categories as $category){
@@ -35,7 +35,7 @@ class ArticleController extends Controller
 
             if(!empty($datepublication)){
                 //$posts = Article::where('rubriqueid',$category_id)->whereRaw('created_at >= curdate()')->where('datepublication',$datepublication)->orderBy('created_at','desc')->get();
-                $posts = Article::where('category_id',$category_id)->whereRaw('publication_date >= curdate()')->where('publication_date',$datepublication)->orderBy('created_at','desc')->get();
+                $posts = Article::where('category_id',$category_id)->where('publication_date',$datepublication)->orderBy('created_at','desc')->get();
             }else {
                 //$posts = Article::where('is_active','TRUE')->orderBy('created_at','desc')->get();
                 $posts = Article::where('category_id',$category_id)->whereRaw('publication_date >= curdate()')->orderBy('created_at','desc')->get();
@@ -74,54 +74,105 @@ class ArticleController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        return view('article::show');
+        $article = $this->updateArticle(new Article(), $req);
+    	return redirect("/publications");
     }
 
     /**
      * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Article $article)
     {
-        return view('article::edit');
+        $users = (new user)->get_redacteurs();
+        $category = (new Category)->category_online();
+        $chroniques = Chroniques::all()->groupBy('rubrique_id');
+        $collab = (new user)->get_collaborateurs();
+        $userid = Auth::user()->id;
+        
+        $user_details = UsersGroups::select('*')
+		//->join('users_groups','users_groups.user_id','=','groups.id')
+	    ->where('user_id',$userid)
+	    ->get();
+	    
+        return view('article/new',compact('article', 'category','users','chroniques','collab','user_details'));
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Article $article)
     {
-        //
+        $article = $this->updateArticle($article, $request);
+        return redirect("/publications");
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $article = Article::find($id);
+        if(!$article){
+            return "Invalid Article";
+        }
+
+        $article->enligne = "DELETE";
+        $article->save();
+        return "Article has been deleted!";
     }
+
+
+    private function updateArticle(Article $article, $data){
+        $content = $this->formatArticle($data->post_content);
+        $article->surtitle = $data->post_surtitre;
+        $article->title = $data->post_titre;
+        $article->subtitle = $data->post_soustitre;
+        $article->content = $content;
+        $article->summary = $data->post_chapeau;
+        $article->publication_date = $data->post_date;
+        $article->category_id = $data->post_category;
+        $article->subcategory_id = $data->post_chronique;
+        $article->author_id = $data->post_auteurid;
+        $article->author = $data->post_auteur;
+        $article->enter_by = $data->post_entrerpar;
+        $article->keywords = $data->post_motscles;
+        $article->save();
+        
+        $titre = $data->post_titre;
+        $folder = date('Y-m-d');
+        $texte = $content;
+        
+        Storage::put('textesnouvelliste/'.$folder.'/'.$titre.'.txt', $texte);
+        
+        return $article;
+    }
+
+    private function formatArticle($raw){
+        $content = "<p>";
+        //$content .= str_replace("<br>", "</p><p>", $raw);
+        $content .= preg_replace("/\<p\>\&nbsp\;\<\/p\>/", "", $raw);
+        $content .= "</p>";
+        //$content .= filter_var($content, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+        //$content .= addslashes($content);
+        return $content;
+    }
+
     public function addPhoto($id)
     {
         $article = Article::where('id',$id)->first();

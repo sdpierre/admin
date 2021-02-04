@@ -128,7 +128,7 @@
 				
 
 				<li>
-					<a href="{{ url('/') }}/article/create">
+					<a href="{{ url('/') }}/article/addnew/post/">
 						<i class="entypo-pencil"></i>
 						<span class="title">Article</span>
 					</a>
