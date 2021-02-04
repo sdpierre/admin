@@ -32,7 +32,7 @@
 </div>
 <br>
 <div>
-	<p>Maximum upload file size: 1 MB.</p>
+	<p>Maximum upload file size: 5 MB.</p>
 </div>
 
 @stop

@@ -12,22 +12,30 @@ Media Library
 <br>
 
 <div class="jumbotron jumbotron-sm jumbotron-fluid">
-    <form method="get">
+    <form method="get" id="fiterForm">
         <div class="row">
             <div class="col-sm-3">
-                <select name="folder" class="form-control" style="float: left; width:200px; margin-right:10px;">
-                    @for ($i = 0; $i < 12; $i++)
+                <select  id="select_month" name="folder" class="form-control" style="float: left; width:200px; margin-right:10px;">
+                    <!-- @for ($i = 0; $i < 12; $i++)
                         @php $getMonth = strtotime(sprintf('%d months', $i)) @endphp   
                         @php $monthLabel = date('F', $getMonth)." ".date("Y") @endphp
                         @php $monthval = date('m', $getMonth)."-".date("Y") @endphp
                         <option @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $monthval) ) {{ 'selected' }} @endif value="{{ $monthval }}">{{ $monthLabel }}</option>
-                    @endfor
+                    @endfor -->
+                    <option value="">Select Month</option>
+                    <?php 
+                        // print_r($existingMonths);
+                    foreach($existingMonths as $row){?>
+                        <option  @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $row['date']) ) {{ 'selected' }} @endif value="{{ $row['date'] }}">{{$row['month_name']}}</option>
+                        <?php 
+                    }
+                    ?>
                 </select>
             </div>
 
             <div class="col-sm-3">
                 @if(isset($_GET['title']) && !empty($_GET['title'])) @php $title = $_GET['title'] @endphp @endif
-               <input type="text" placeholder="Search By Title" class="form-control" name="title" value="@if(isset($title) && !empty($title)) {{ preg_replace('/[^A-Za-z0-9\-+]/', '', $title) }} @endif" style="float: right;  margin-right:10px;">
+               <input type="text" placeholder="Search By Title & photographer" class="form-control" name="title" value="@if(isset($title) && !empty($title)) {{ preg_replace('/[^A-Za-z0-9\-+]/', '', $title) }} @endif" style="float: right;  margin-right:10px;">
             </div>
             <div class="col-sm-6">
                 @if(isset($_GET['keyword']) && !empty($_GET['keyword'])) @php $keyword = $_GET['keyword'] @endphp @endif
@@ -88,7 +96,7 @@ Media Library
                 <p> (Unattached) </p>
                 <a href="javascript:;" data-id="{{ $media->id }}" class="attach-modal">Attach</a>
                 @else
-                <p> {{ substr(getArticleTitleByMediaId($media->id), 0, 10) }} </p>
+                
                 <a href="{{ url('media/detach/'.$media->id )}}" >Detach</a>
                 @endif
             </td>
@@ -113,5 +121,11 @@ Media Library
         </div>
     </div>
 </div>
+<script>
 
+    $('#select_month').change(function(){
+        $('#fiterForm').submit();
+    });
+
+</script>
 @stop

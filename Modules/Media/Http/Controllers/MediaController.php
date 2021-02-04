@@ -29,40 +29,42 @@ class MediaController extends Controller
         $title = preg_replace('/[^A-Za-z0-9\-+]/', '', $title);
         $keyword = preg_replace('/[^A-Za-z0-9\-+]/', '', $keyword);
 
-
-    	if( !empty($folder) &&  !empty($title) && !empty($keyword) ){
-    		$new_date = "01-".$folder;
-    		$folder_date = date('Y-m', strtotime($new_date));
-
-            $allMediaFiles = Media::with(['keyword'])->where('title', 'LIKE', "%{$title}%")->orWhere('folder_date', 'LIKE', "%{$folder_date}%")->orderBy('created_at','desc');
-            $allMediaFiles = $allMediaFiles->whereHas('keyword', function($q) use($keyword){
+        $count = 0;
+        $allMediaFiles = Media::with(['keyword']);
+        if(!empty($keyword)){
+             $allMediaFiles->whereHas('keyword', function($q) use($keyword){
                 $q->whereIn('keyword',$keyword);
             });
-            $allMediaFiles = $allMediaFiles->paginate(5);
+        }
+        if(!empty($title)){
+            $allMediaFiles->where(function($q) use ($title) { 
+                $q->where('title', 'LIKE', '%' . $title . '%')
+                ->orWhere('photographer', 'LIKE', '%' . $title . '%');
+             });
+        }
+        if(!empty($folder)){
+            $allMediaFiles->where('folder_date', 'LIKE', "%{$folder}%");
+        }else {
+             $current_date = date('Y-m');
+    		 $allMediaFiles->Where('folder_date', 'LIKE', "%{$current_date}%");
+        }
+        $count = $allMediaFiles->count();
+        $allMediaFiles = $allMediaFiles->orderBy('created_at','desc')->paginate(5);
+      
 
-    	} else if( !empty($folder) && !empty($title) ){
-    		$new_date = "01-".$folder;
-            $folder_date = date('Y-m', strtotime($new_date));
-
-    		$allMediaFiles = Media::with(['keyword'])->Where('title', 'LIKE', "%{$title}%")->orWhere('folder_date', '=', date('Y-m', strtotime($new_date)))->orderBy('created_at','desc');
-            $allMediaFiles = $allMediaFiles->paginate(5);
-    	
-    	} else if( !empty($folder) && !empty($keyword) ){
-            $new_date = "01-".$folder;
-            $folder_date = date('Y-m', strtotime($new_date));
-
-    		$allMediaFiles = Media::with(['keyword'])->Where('folder_date', 'LIKE', "%{$folder_date}%")->orderBy('created_at','desc');
-            $allMediaFiles = $allMediaFiles->whereHas('keyword', function($q) use($keyword){
-                $q->whereIn('keyword',$keyword);
-            });
-            $allMediaFiles = $allMediaFiles->paginate(5);
-    	
-    	} else {
-    		$current_date = date('Y-m');
-    		$allMediaFiles = Media::with(['keyword'])->Where('folder_date', 'LIKE', "%{$current_date}%")->orderBy('created_at','desc')->paginate(5);
-    	}
-
-        return view('media::index')->with(['allMediaFiles' => $allMediaFiles]);
+        $all = [];
+        for($i=1;$i<=12;$i++){
+            $row = [];
+            $from_date = date('Y-'.$i.'-01');
+            $to_date = date('Y-'.$i.'-t');
+            $media = Media::whereBetween(DB::raw('DATE(created_at)'), array($from_date, $to_date))->get();
+            if(count($media)>0){
+                $row['date']  = date('Y-m',strtotime($from_date));
+                $row['month_name']  = date("F Y",strtotime($from_date));
+                $all[] = $row;
+            }
+        }
+        return view('media::index')->with(['allMediaFiles' => $allMediaFiles , 'existingMonths' => $all , 'count'=>$count]);
     }
 
     /**
@@ -150,7 +152,7 @@ class MediaController extends Controller
      */
     public function update(Request $request)
     {
-        //
+       
         $id = $request->post('image_id');
         $keywords = $request->post('keywords');
 
@@ -188,7 +190,8 @@ class MediaController extends Controller
 			}
 
 	        $media->title = $request->post('title');
-	        $media->description = $request->post('description');
+            $media->description = $request->post('description');
+            $media->photographer = $request->post('photographer');
 	        $media->save();
 
             if(!empty($keywords)){
