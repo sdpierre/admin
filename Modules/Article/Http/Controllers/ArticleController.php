@@ -58,7 +58,7 @@ class ArticleController extends Controller
         $users = (new user)->get_redacteurs();
         $collab = (new user)->get_collaborateurs();
         $category = (new Category)->category_online();
-        $chroniques = SubCategory::all()->groupBy('rubrique_id');
+        $chroniques = SubCategory::all()->groupBy('category_id');
         $article = new Article();
         
         $userid = Auth::user()->id;
