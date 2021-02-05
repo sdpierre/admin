@@ -14,5 +14,9 @@ class Media extends Model
 
     public function keyword(){
 	    return $this->hasMany('App\MediaKeywords', 'media_id', 'id');
+    }
+    
+    public function mediaArticles(){
+	    return $this->hasMany('App\MediaArticle', 'media_id', 'id');
 	}
 }

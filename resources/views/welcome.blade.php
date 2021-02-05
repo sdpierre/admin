@@ -128,7 +128,7 @@
 				
 
 				<li>
-					<a href="{{ url('/') }}/article/addnew/post/">
+					<a href="{{ url('/') }}/article/create">
 						<i class="entypo-pencil"></i>
 						<span class="title">Article</span>
 					</a>
@@ -433,7 +433,7 @@
 							<div class="form-group">
 								<label for="field-1" class="col-sm-12">Photographer</label>
 								<div class="col-sm-12">
-									<input type="text" class="form-control" data-role="tagsinput" name="photographer" id="photographer" value="" placeholder="Enter photographer name" />
+									<input type="text" class="form-control" name="photographer" id="photographer" value="" placeholder="Enter photographer" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -503,7 +503,7 @@
 
 
 	<!-- Modal 4 (Basic)-->
-	<div class="modal fade" id="modal-4">
+	<div class="modal fade" id="modal-4" data-backdrop="static">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				
@@ -511,8 +511,9 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title">Attach to existing content</h4>
 				</div>
-				<form method="post" action="{{ url('media/add_featured_image') }}">
+				<form method="post" id="photo_article" action="{{ url('media/add_featured_image') }}">
 					{{ csrf_field() }}
+					<input type="hidden" id="type" name="type" value="add">
 					<div class="modal-body">
 						<input type="hidden" name="media_id" id="mediaId" value="" />
 						<div class="row">
@@ -526,7 +527,7 @@
 						
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-info bulk-btn">Select</button>
+						<button type="button" onclick="addArticleToPhoto()" class="btn btn-info">Select</button>
 					</div>
 				</form>
 			</div>
@@ -608,6 +609,27 @@
 		</div>
 	</div>
 
+		<!-- Modal 8 (Basic)-->
+		<div class="modal fade" id="modal-8">
+		<div class="modal-dialog" style="width: 50%">
+			<div class="modal-content">
+			    <form  >
+				    <div class="modal-header">
+						<button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title"><strong>Articles with this photo</strong></h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div id="more-article-list"></div>
+							</div>
+						</div>
+						
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<!-- The actual snackbar -->
 	<div id="snackbar">Add to featured image...</div>
 </body>

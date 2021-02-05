@@ -16,5 +16,9 @@ class MediaArticle extends Model
 
     public function media(){
 	    return $this->hasMany('App\Media', 'id', 'media_id');
+    }
+    
+    public function article(){
+	    return $this->belongsTo('App\Article');
 	}
 }

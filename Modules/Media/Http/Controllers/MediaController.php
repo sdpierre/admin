@@ -52,6 +52,52 @@ class MediaController extends Controller
         $allMediaFiles = $allMediaFiles->orderBy('created_at','desc')->paginate(5);
       
 
+    
+    	// if( !empty($folder) &&  !empty($title) && !empty($keyword) ){
+        //     $new_date = "01-".$folder;
+    	// 	$folder_date = date('Y-m', strtotime($new_date));
+            
+        //     $allMediaFiles = Media::with(['keyword'])
+        //     ->where(function($q) use ($title) { 
+        //         $q->where('title', 'LIKE', '%' . $title . '%')
+        //         ->orWhere('photographer', 'LIKE', '%' . $title . '%');
+        //      })
+        //     ->orWhere('folder_date', 'LIKE', "%{$folder_date}%")->orderBy('created_at','desc');
+        //     $allMediaFiles = $allMediaFiles->whereHas('keyword', function($q) use($keyword){
+        //         $q->whereIn('keyword',$keyword);
+        //     });
+        //     $allMediaFiles = $allMediaFiles->paginate(5);
+
+    	// } else if( !empty($folder) && !empty($title) ){
+        //  	$new_date = "01-".$folder;
+        //     $folder_date = date('Y-m', strtotime($new_date));
+
+        //     $allMediaFiles = Media::with(['keyword'])
+        //     ->where(function($q) use ($title) { 
+        //         $q->where('title', 'LIKE', '%' . $title . '%')
+        //         ->orWhere('photographer', 'LIKE', '%' . $title . '%');
+        //      })
+        //     ->orWhere('folder_date', '=', date('Y-m', strtotime($new_date)))->orderBy('created_at','desc');
+        //     $allMediaFiles = $allMediaFiles->paginate(5);
+    	
+    	// } else if( !empty($folder) && !empty($keyword) ){
+        //     echo "<pre>";
+        //     print_r($folder);die;
+        //     $new_date = "01-".$folder;
+        //     $folder_date = date('Y-m', strtotime($new_date));
+    	// 	$allMediaFiles = Media::with(['keyword'])->Where('folder_date', 'LIKE', "%{$folder_date}%")->orderBy('created_at','desc');
+        //     $allMediaFiles = $allMediaFiles->whereHas('keyword', function($q) use($keyword){
+        //         $q->whereIn('keyword',$keyword);
+        //     });
+        //     $allMediaFiles = $allMediaFiles->paginate(5);
+    	
+    	// } else {
+    	// 	$current_date = date('Y-m');
+    	// 	$allMediaFiles = Media::with(['keyword'])->Where('folder_date', 'LIKE', "%{$current_date}%")->orderBy('created_at','desc')->paginate(5);
+        // }
+      
+        // echo "<pre>";
+        // print_r($allMediaFiles[2]->mediaArticles[0]->article);die;
         $all = [];
         for($i=1;$i<=12;$i++){
             $row = [];
@@ -67,6 +113,10 @@ class MediaController extends Controller
         return view('media::index')->with(['allMediaFiles' => $allMediaFiles , 'existingMonths' => $all , 'count'=>$count]);
     }
 
+    public function getMoreArticles(Request $request){
+        $articles =  MediaArticle::where('media_id',$request->media_id)->get();
+        return Response::json(\View::make('media::_more_article', ['articles' => $articles])->render());
+    }
     /**
      * Show the form for creating a new resource.
      * @return Response
@@ -188,8 +238,7 @@ class MediaController extends Controller
 
                 $media->thumb = $createNewThumbnailName;
 			}
-
-	        $media->title = $request->post('title');
+            $media->title = $request->post('title');
             $media->description = $request->post('description');
             $media->photographer = $request->post('photographer');
 	        $media->save();
@@ -274,35 +323,50 @@ class MediaController extends Controller
 		imagejpeg($virtual_image, $dest);
 	}
 
-    public function getAllArticles()
+    public function getAllArticles(Request $request)
     {
+        $addedArticle = [];
+        $type = 'add';
+        if(isset($request->media_id) && !empty($request->media_id)){
+         $articleIds = MediaArticle::select('article_id')->where('media_id' , $request->media_id)->get();
+         foreach($articleIds as $article){
+            $addedArticle[] =$article['article_id'];
+         }
+         $type = 'edit';
+        }
         $title = (isset($_GET['title']) && !empty($_GET['title'])) ? $_GET['title'] : '';
 
         if(!empty($title)) {
-            $articles = Article::select('id_article' ,'titre', 'created_at', 'ispublished')->where('titre', 'like', '%'.$title.'%')->orderBy('created_at', 'desc')->paginate(15);
+            $articles = Article::where('title', 'like', '%'.$title.'%')->orderBy('created_at', 'desc')->paginate(15);
         }else{
-            $articles = Article::select('id_article' ,'titre', 'created_at', 'ispublished')->orderBy('created_at', 'desc')->paginate(15);
+            $articles = Article::orderBy('created_at', 'desc')->paginate(15);
         }
 
-        return Response::json(\View::make('media::articles', ['articles' => $articles])->render());
+        return Response::json(\View::make('media::articles', ['articles' => $articles,'addedArticle'=>$addedArticle,'addedString' =>implode(",",$addedArticle), 'type'=>$type])->render());
     }
 
     public function addFeaturedImage(Request $request)
     {
-        $media_id = $request->post('media_id');
-        $article_id = $request->post('article_id');
 
-        $article = new MediaArticle;
-        $article->media_id = $media_id;
-        $article->article_id = $article_id;
-        $article->save();
-
+        $post = $request->all();
+        $media_id = $post['media_id'];
+        $articleIds =  json_decode($post['articleIds']);
+        $addedArticle = [];
+        if($post['type'] == 'edit'){
+            MediaArticle::where('media_id',$media_id)->delete();
+        }
+        foreach($articleIds as $key => $val){
+            $article = new MediaArticle();
+            $article->media_id = $media_id;
+            $article->article_id = $val;
+            $article->save();
+        }
         $media = Media::find($media_id);
         $media->is_featured = 'TRUE';
         $media->updated_at = date('Y-m-d H:i:s');
         $media->save();
 
-        return redirect('media');
+     return json_encode(['success'=>true , 'message' => 'Article attached successfully.']);
     }
 
     public function detach(Request $request)

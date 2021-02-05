@@ -27,6 +27,8 @@ Route::prefix('media')->group(function() {
     // Get all articles
     Route::get('get_all_articles', 'MediaController@getAllArticles')->name('get_all_articles');
 
+    Route::get('get_more_articles', 'MediaController@getMoreArticles');
+
     // Add image to article
     Route::post('add_featured_image', 'MediaController@addFeaturedImage')->name('add_featured_image');
 

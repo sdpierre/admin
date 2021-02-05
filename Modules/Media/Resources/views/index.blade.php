@@ -24,7 +24,6 @@ Media Library
                     @endfor -->
                     <option value="">Select Month</option>
                     <?php 
-                        // print_r($existingMonths);
                     foreach($existingMonths as $row){?>
                         <option  @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $row['date']) ) {{ 'selected' }} @endif value="{{ $row['date'] }}">{{$row['month_name']}}</option>
                         <?php 
@@ -57,7 +56,9 @@ Media Library
         </select>
         <button class="btn btn-primary bulk-modal" style="float: left;"> Apply</button>
     </div>
-  
+    <div class="col-sm-2" id="total_count">
+       <p><strong>Total Count:</strong>{{$count}} <strong>photos</strong></p>
+    </div>               
 </div>
 
 
@@ -97,7 +98,19 @@ Media Library
                 <a href="javascript:;" data-id="{{ $media->id }}" class="attach-modal">Attach</a>
                 @else
                 
-                <a href="{{ url('media/detach/'.$media->id )}}" >Detach</a>
+                    @if(isset($media->mediaArticles) && count($media->mediaArticles)>0)
+                    <p> {{ ($media->mediaArticles[0]->article)?$media->mediaArticles[0]->article->title:'-' }} </p>
+                       <div class="edit_add">
+                       <a href="javascript:void(0)" onclick="editArticle('{{$media->id}}')" >Edit</a> |
+                       <a href="{{url('media/create')}}" >Add Photo</a>
+                      </div>
+                        @if(count($media->mediaArticles)>1)
+                        <a class="btn btn-info" onclick="showMoreArticle('{{$media->id}}')" href="javascript:void(0)" >Show more ({{count($media->mediaArticles)}})</a>
+                        @endif
+                    @else
+                      {{'-'}}
+                    @endif
+                <!-- <a href="{{ url('media/detach/'.$media->id )}}" >Detach</a> -->
                 @endif
             </td>
             <td>{{ date('m/d/Y', strtotime($media->created_at)) }}</td>
@@ -106,7 +119,11 @@ Media Library
 
 
         @else
-        No records found
+        <tr>
+            <td colspan="5" class="alert-danger" style="text-align:center">
+        {{'No records found'}}
+           </td>
+        </tr>
         @endif
 
 
