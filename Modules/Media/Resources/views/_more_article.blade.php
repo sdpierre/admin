@@ -7,7 +7,7 @@
 	@foreach($articles as $article)
 		<tr>
 			<td>{{$article->article->title}}</td>
-			<td id="action_width">
+			<td class="action_width">
             <a href="javascript:void(0)" onclick="editArticle('{{$article->media_id}}')" >Edit</a> |
             <a href="{{url('media/create')}}" >Add Photo</a>
             </td>
