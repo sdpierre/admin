@@ -14,7 +14,7 @@
 			<td>{{ substr($article->title, 0, 15) . '...' }}</td>
 			<td>{{ 'Article' }}</td>
 			<td>{{ date('m/d/Y', strtotime($article->created_at)) }}</td>
-			@if($article->ispublished == 'TRUE')
+			@if($article->is_active == 'TRUE')
 				<td>{{ 'Published' }}</td>
 			@else
 				<td>{{ 'Unpublished' }}</td>	
