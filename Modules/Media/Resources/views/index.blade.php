@@ -36,7 +36,7 @@ Media Library
 
             <div class="col-sm-3">
                 @if(isset($_GET['title']) && !empty($_GET['title'])) @php $title = $_GET['title'] @endphp @endif
-               <input type="text" placeholder="Search By Title & photographer" class="form-control" name="title" value="@if(isset($title) && !empty($title)) {{ preg_replace('/[^A-Za-z0-9\-+]/', '', $title) }} @endif" style="float: right;  margin-right:10px;">
+               <input type="text" placeholder="Search By Title & photographer" class="form-control" name="title" >
             </div>
             <div class="col-sm-6">
                 @if(isset($_GET['keyword']) && !empty($_GET['keyword'])) @php $keyword = $_GET['keyword'] @endphp @endif
