@@ -24,7 +24,7 @@ Media Library
                         <option @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $monthval) ) {{ 'selected' }} @endif value="{{ $monthval }}">{{ $monthLabel }}</option>
                     @endfor -->
                     <option value="">Select Month</option>
-                    <option value="all">All Dates</option>
+                    <option value="all" @if( (!empty($_GET['folder'])) && ($_GET['folder'] == 'all') ) {{ 'selected' }} @endif >All Dates</option>
                     <?php 
                     foreach($existingMonths as $row){?>
                         <option  @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $row['date']) ) {{ 'selected' }} @endif value="{{ $row['date'] }}">{{$row['month_name']}}</option>
