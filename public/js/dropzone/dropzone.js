@@ -816,7 +816,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         this.on(eventName, this.options[eventName]);
       }
       this.on("thumbnail", function(file) {
-        if (file.width < 400 || file.height < 600 ) {
+        if (file.width < 400 && file.height < 300 ) {
           var error_message = 'Image width or height too small.';
           return _this._errorProcessing([file], error_message);
         }

@@ -27,7 +27,7 @@ if(typeof Dropzone != 'undefined')
 				var $f = $('<tr><td class="name"></td><td class="size"></td><td class="type"></td><td class="status"></td></tr>');
 
 				dz.on("success", function(file) {
-
+					
 					var imageWidth = file.width;
 					var imageHeight = file.height;
 
@@ -55,6 +55,7 @@ if(typeof Dropzone != 'undefined')
 				})
 				.on('error', function(file)
 				{
+					console.log(file)
 					var _$f = $f.clone();
 					
 					dze_info.removeClass('hidden');
@@ -89,13 +90,17 @@ var context;
 var image;
 
 $(document).on("click", ".image-modal", function () {
+
 	$('#modal-1').modal('show');
 	var imageId = $(this).data('id');
 	var imageUrl = $(this).data('image');
 	var imageTitle = $(this).data('title');
 	var imageKeywords = $(this).data('keywords');
 	var imageDesc = $(this).data('desc');
-	$("#modal-1 .modal-body #imageId").val( imageId );
+	var photographer = $(this).data('photographer');
+
+	$("#modal-1 .modal-body #photographer").val( photographer);
+	$("#modal-1 .modal-body #imageId").val(imageId);
 	$("#modal-1 .modal-body #cropbox").attr("src", imageUrl );
 	$("#modal-1 .modal-body #imageTitle").val( imageTitle );
 	$("#modal-1 .modal-body #imageKeywords").val( imageKeywords );

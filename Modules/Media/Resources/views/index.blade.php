@@ -13,6 +13,7 @@ Media Library
 
 <div class="jumbotron jumbotron-sm jumbotron-fluid">
     <form method="get" id="fiterForm">
+    <input type="hidden" value="1" name="page" id="page">
         <div class="row">
             <div class="col-sm-3">
                 <select  id="select_month" name="folder" class="form-control" style="float: left; width:200px; margin-right:10px;">
@@ -23,6 +24,7 @@ Media Library
                         <option @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $monthval) ) {{ 'selected' }} @endif value="{{ $monthval }}">{{ $monthLabel }}</option>
                     @endfor -->
                     <option value="">Select Month</option>
+                    <option value="all">All Dates</option>
                     <?php 
                     foreach($existingMonths as $row){?>
                         <option  @if( (!empty($_GET['folder'])) && ($_GET['folder'] == $row['date']) ) {{ 'selected' }} @endif value="{{ $row['date'] }}">{{$row['month_name']}}</option>
@@ -89,7 +91,7 @@ Media Library
                         @php $keywords .= $value->keyword.',' @endphp
                     @endforeach
                 @endif
-                <p> <a href="javascript:;" data-id="{{ $media->id }}" data-image="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}" data-title="{{ $media->title }}" data-desc="{{ $media->description}}" data-keywords="{{ rtrim($keywords,',') }}"  class="image-modal">Edit</a> | <a class="text-danger delete-image" href="javascript:;" data-id="{{ $media->id }}"> Delete Permanently</a> | <a target="blank_" href="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}">View</a></p>
+                <p> <a href="javascript:;" data-id="{{ $media->id }}" data-photographer="{{ $media->photographer }}" data-image="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}" data-title="{{ $media->title }}" data-desc="{{ $media->description}}" data-keywords="{{ rtrim($keywords,',') }}"  class="image-modal">Edit</a> | <a class="text-danger delete-image" href="javascript:;" data-id="{{ $media->id }}"> Delete Permanently</a> | <a target="blank_" href="{{ url('images_lenouvelliste/articles/'.$media->folder_date.'/'.$media->filename) }}">View</a></p>
             </td>
             <td>{{ Auth::user()->username }}</td>
             <td>
@@ -144,5 +146,14 @@ Media Library
         $('#fiterForm').submit();
     });
 
+    $('.pagination li > a').on('click' , function(e){
+        e.preventDefault();
+        var href = $(this).attr('href');
+        var qs = href.substring(href.indexOf('?') + 1).split('&');
+        var page = qs[0];
+        page = page.split('=');
+        $('#page').val(page[1]);
+        $('#fiterForm').submit();
+    });
 </script>
 @stop

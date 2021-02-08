@@ -22,6 +22,7 @@ class MediaController extends Controller
      */
     public function index()
     {	
+
         $keyword = (!empty($_GET['keyword'])) ? explode(',', $_GET['keyword']) : '';
         $title = (!empty($_GET['title'])) ? $_GET['title'] : '';
         $folder = (!empty($_GET['folder'])) ? $_GET['folder'] : '';
@@ -43,11 +44,16 @@ class MediaController extends Controller
              });
         }
         if(!empty($folder)){
-            $allMediaFiles->where('folder_date', 'LIKE', "%{$folder}%");
-        }else {
-             $current_date = date('Y-m');
-    		 $allMediaFiles->Where('folder_date', 'LIKE', "%{$current_date}%");
+            if($folder!='all'){
+                $allMediaFiles->where('folder_date', 'LIKE', "%{$folder}%");
+            }
+            // else{
+            //     $current_date = date('Y');
+    	    //     $allMediaFiles->Where('folder_date', 'LIKE', "%{$current_date}%");
+            // }
+            
         }
+     
         $count = $allMediaFiles->count();
         $allMediaFiles = $allMediaFiles->orderBy('created_at','desc')->paginate(5);
       
@@ -151,8 +157,8 @@ class MediaController extends Controller
         $getMimeType = $file->getMimeType();
 
         list($width, $height) = getimagesize($getRealPath);
-
-        if ($width > 400 || $height > 600) {
+       
+        if ($width > 400 && $height > 300) {
             $dir = public_path('images_lenouvelliste/articles/').date('Y-m-d')."/";
 
             if(!is_dir($dir)){
@@ -170,7 +176,9 @@ class MediaController extends Controller
             $media->created_at = date('Y-m-d H:i:s');
             $media->updated_at = date('Y-m-d H:i:s');
             $media->save();
+          return  Response::json(['success'=>true]);
         }
+        return Response::json(['success'=>false]);
         
     }
 
